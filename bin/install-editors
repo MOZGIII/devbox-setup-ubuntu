@@ -1,0 +1,13 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+
+package-repo-add 'ppa:webupd8team/atom'
+package-repo-add 'ppa:webupd8team/sublime-text-3'
+
+package-list-update
+
+package-install-from-repos atom sublime-text-installer vim

@@ -1,0 +1,27 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+reset-list
+
+package-repo-add 'ppa:peterlevi/ppa'
+add-to-list variety
+
+package-repo-add 'ppa:numix/ppa'
+add-to-list numix-icon-theme-circle numix-icon-theme
+
+package-repo-add 'ppa:indicator-multiload/stable-daily'
+add-to-list indicator-multiload
+
+# Available form system repos
+add-to-list unity-tweak-tool
+
+# Update indexes and install packages from the list
+package-list-update
+package-install-from-repos $LIST
+
+run_command_as_user "$NON_ROOT_USER" "gsettings set org.gnome.desktop.interface icon-theme 'Numix-Circle'"

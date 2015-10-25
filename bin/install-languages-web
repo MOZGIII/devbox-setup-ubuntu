@@ -1,0 +1,23 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing common requirements'
+package-install-from-repos curl wget git subversion mercurial gnupg
+
+log 'Installing nodejs'
+curl -sL https://deb.nodesource.com/setup_4.x | bash -
+package-install-from-repos nodejs
+
+log "Installing ruby with rvm for $NON_ROOT_USER"
+RVM_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
+  \curl -sSL https://get.rvm.io | bash -s stable --ruby
+  source "~/.rvm/scripts/rvm"
+  rvm use --default ruby
+COMMANDEOF)"
+run_command_as_user "$NON_ROOT_USER" "$RVM_INSTALL_COMMAND"

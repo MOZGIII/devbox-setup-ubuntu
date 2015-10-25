@@ -1,0 +1,53 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+
+package-list-update
+
+# Start with empty list
+reset-list
+
+# GIT and stuff
+add-to-list git git-gui git-svn git-cola python-pyinotify
+
+# Other VCS
+add-to-list subversion mercurial
+
+# Downloaders
+add-to-list wget curl
+
+# APT GUIs and other related stuff
+add-to-list aptitude
+
+# Default build system and some standard compilers
+add-to-list build-essential cmake cmake-gui automake
+
+# Debuggers and tracers
+add-to-list gdb valgrind strace
+
+# System tools and utils
+add-to-list htop screen ssh rsync x11vnc
+
+# Archivers
+add-to-list p7zip-full p7zip-rar
+
+# Command line utils
+add-to-list bc
+
+# Shell
+add-to-list zsh
+
+# Some GUI apps
+add-to-list meld hexedit
+
+# Chats
+add-to-list hexchat pidgin
+
+# Install some CLI editors (duplicates with other scripts possible)
+add-to-list vim nano
+
+# Install all this
+package-install-from-repos $LIST
