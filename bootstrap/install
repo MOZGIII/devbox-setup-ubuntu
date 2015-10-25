@@ -1,9 +1,9 @@
 #!/bin/bash
-set +e
-INSTALL_DIR='~/.devbox-setup-ubuntu'
+set -e
+INSTALL_DIR="$HOME/.devbox-setup-ubuntu"
 GIT_REPO='https://github.com/MOZGIII/devbox-setup-ubuntu.git'
 
-mkpir -p "$INSTALL_DIR"
+mkdir -p "$INSTALL_DIR"
 git clone "$GIT_REPO" "$INSTALL_DIR"
 cd "$INSTALL_DIR"
 echo "Now cd \"$INSTALL_DIR\" and call needed installers from $INSTALL_DIR/bin"
