@@ -1,7 +1,7 @@
 #!/bin/bash
 set +e
 INSTALL_DIR='~/.devbox-setup-ubuntu'
-GIT_REPO=''
+GIT_REPO='https://github.com/MOZGIII/devbox-setup-ubuntu.git'
 
 mkpir -p "$INSTALL_DIR"
 git clone "$GIT_REPO" "$INSTALL_DIR"
