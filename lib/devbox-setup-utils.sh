@@ -1,5 +1,8 @@
 function devbox-setup-init {
-  set -ex
+  set -e
+
+  # Enable debug trace is asked to
+  [[ ! -z "$DEBUG" ]] && [[ "$DEBUG" == "on" ]] && set -x
 
   # Load release info
   . /etc/lsb-release
@@ -8,7 +11,7 @@ function devbox-setup-init {
   parse-args
 
   # init common variables here
-  echo 'devbox-setup config loaded'
+  log 'devbox-setup config loaded'
 }
 
 function parse-args {

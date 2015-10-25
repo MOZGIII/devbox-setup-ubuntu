@@ -17,6 +17,9 @@ Quick install with bootstrap script:
 
     \curl -sS https://raw.githubusercontent.com/MOZGIII/devbox-setup-ubuntu/master/bootstrap/install | bash
 
-## Testing
+## Development and testing
 
 Use vagrant and temporary virtual machine to keep your system safe.
+Enable debug tracing of the scripts by setting `DEBUG=on`, in example:
+
+    sudo DEBUG=on bin/install-vagrant
