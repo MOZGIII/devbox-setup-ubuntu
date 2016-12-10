@@ -8,7 +8,9 @@ require-non-root-user
 
 reset-list
 
-package-repo-add 'ppa:peterlevi/ppa'
+if [[ "$(lsb_release -cs)" != 'xenial' ]]; then
+  package-repo-add 'ppa:peterlevi/ppa'
+fi
 add-to-list variety
 
 package-repo-add 'ppa:numix/ppa'
