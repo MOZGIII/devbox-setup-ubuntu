@@ -10,7 +10,7 @@ unless REQURED_PLUGINS.all? {|e| Vagrant.has_plugin?(e) }
 end
 
 Vagrant.configure(2) do |config|
-  config.vm.box = 'boxcutter/ubuntu1404-desktop'
+  config.vm.box = 'boxcutter/ubuntu1604-desktop'
 
   # config.vm.network 'forwarded_port', guest: 80, host: 8080
   # config.vm.network 'private_network', ip: '192.168.33.10'
