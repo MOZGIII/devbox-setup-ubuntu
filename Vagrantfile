@@ -19,7 +19,17 @@ Vagrant.configure(2) do |config|
   config.vm.network 'private_network', type: :dhcp
 
   config.vm.provider 'virtualbox' do |vb|
-    # vb.gui = true
+    gui_mode = case ENV['GUI']
+    when 'true', 'on'
+      true
+    when 'false', 'off'
+      false
+    when nil, ''
+      nil
+    else
+      raise "Unknown GUI value #{ENV['GUI'].inspect}, use true/false or leave blank for default"
+    end
+    vb.gui = gui_mode unless gui_mode.nil?
     vb.memory = 1024
   end
 
