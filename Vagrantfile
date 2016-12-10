@@ -3,7 +3,6 @@
 
 REQURED_PLUGINS = %w{
   vagrant-vbguest
-  vagrant-cachier
 }
 unless REQURED_PLUGINS.all? {|e| Vagrant.has_plugin?(e) }
   raise "This Vagrantfile requires the following plugins to be installed: #{REQURED_PLUGINS * ' '}"
@@ -32,8 +31,6 @@ Vagrant.configure(2) do |config|
     vb.gui = gui_mode unless gui_mode.nil?
     vb.memory = 1024
   end
-
-  config.cache.scope = :box if Vagrant.has_plugin?('vagrant-cachier')
 
   config.vm.provision 'shell', inline: <<-SHELL
     sudo apt-get update
