@@ -1,0 +1,52 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+# Install packages
+package-list-update
+package-install-from-repos zsh
+
+# Install on-my-zsh
+run_command_as_user "$NON_ROOT_USER" "export SHELL=zsh ; sh -c \"\$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)\" ; true"
+
+# Create user shell
+USER_SHELL_NAME="${NON_ROOT_USER}-shell"
+log "Creating user shell at $USER_SHELL_NAME"
+cat <<-CODE > "/usr/local/bin/$USER_SHELL_NAME"
+#!/bin/bash -l
+exec zsh
+CODE
+chmod +x "/usr/local/bin/$USER_SHELL_NAME"
+
+# Configure zsh
+ZSHRC_PATH="$(run_command_as_user "$NON_ROOT_USER" "echo $HOME")/.zshrc"
+log "Configuring zsh via $ZSHRC_PATH"
+BUMPER_STRING='# devbox-setup config below'
+
+# Add config to the end of file
+if ! grep -q "$BUMPER_STRING" "$ZSHRC_PATH"; then
+cat <<-CODE >> "$ZSHRC_PATH"
+
+$BUMPER_STRING
+unsetopt share_history
+[[ -f /etc/profile.d/vte.sh ]] && source /etc/profile.d/vte.sh
+[[ -f "\$HOME/.aliases" ]] && source "\$HOME/.aliases"
+CODE
+fi
+
+# Customize theme
+sed -i 's/^ZSH_THEME="robbyrussell"$/& # extended for ssh support\n\nif [[ ! -z "$SSH_CONNECTION"; ]] then\n  ZSH_THEME="ys"\nfi/' "$ZSHRC_PATH"
+
+# Set shell for X11 sessions
+log "Configuring user shell to be used in X11 sessions for user $NON_ROOT_USER"
+CONFIGURE_SHELL_COMMAND="$(cat <<-COMMANDEOF
+if [[ ! -f ~/.xsessionrc ]] || ! grep -q 'SHELL=' ~/.xsessionrc; then
+  echo 'SHELL=/usr/local/bin/$USER_SHELL_NAME' >> ~/.xsessionrc
+fi
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$CONFIGURE_SHELL_COMMAND"
