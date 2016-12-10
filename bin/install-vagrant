@@ -3,9 +3,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 source ../lib/devbox-setup-utils.sh
 devbox-setup-init
 
-VAGRANT_VERSION='vagrant_1.7.4_x86_64'
-VIRTUALBOX_VERSION='virtualbox-5.0'
-CHEFDK_VERSION='ubuntu/12.04/x86_64/chefdk_0.9.0-1_amd64'
+VAGRANT_VERSION='1.8.6/vagrant_1.8.6_x86_64'
+VIRTUALBOX_VERSION='virtualbox-5.1'
+CHEFDK_VERSION='1.0.3/ubuntu/16.04/chefdk_1.0.3-1_amd64'
 
 VAGRANT_PLUGINS='vagrant-vbguest vagrant-omnibus vagrant-berkshelf vagrant-cachier'
 
@@ -17,8 +17,8 @@ package-repo-add "deb http://download.virtualbox.org/virtualbox/debian $DISTRIB_
 package-list-update
 package-install-from-repos "$VIRTUALBOX_VERSION"
 
-package-install-from-web-with-cache "https://dl.bintray.com/mitchellh/vagrant/$VAGRANT_VERSION.deb" "/tmp/devbox-setup/vagrant.deb"
-package-install-from-web-with-cache "https://opscode-omnibus-packages.s3.amazonaws.com/$CHEFDK_VERSION.deb" "/tmp/devbox-setup/chefdk.deb"
+package-install-from-web-with-cache "https://releases.hashicorp.com/vagrant/$VAGRANT_VERSION.deb" "/tmp/devbox-setup/vagrant.deb"
+package-install-from-web-with-cache "https://packages.chef.io/files/stable/chefdk/$CHEFDK_VERSION.deb" "/tmp/devbox-setup/chefdk.deb"
 
 log 'Installing vagrant plugins'
 run_command_as_user "$NON_ROOT_USER" "vagrant plugin install $VAGRANT_PLUGINS"
