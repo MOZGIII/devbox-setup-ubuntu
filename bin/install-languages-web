@@ -10,7 +10,7 @@ log 'Installing common requirements'
 package-install-from-repos curl wget git subversion mercurial gnupg
 
 log 'Installing nodejs'
-curl -sL https://deb.nodesource.com/setup_4.x | bash -
+curl -sL https://deb.nodesource.com/setup_7.x | bash -
 package-install-from-repos nodejs
 
 log "Installing ruby with rvm for $NON_ROOT_USER"
