@@ -9,10 +9,6 @@ require-non-root-user
 log 'Installing common requirements'
 package-install-from-repos curl wget git subversion mercurial gnupg
 
-log 'Installing nodejs'
-curl -sL https://deb.nodesource.com/setup_7.x | bash -
-package-install-from-repos nodejs
-
 log "Installing ruby with rvm for $NON_ROOT_USER"
 RVM_INSTALL_COMMAND="$(cat <<-COMMANDEOF
   curl -sSL https://rvm.io/mpapis.asc | gpg --import -
