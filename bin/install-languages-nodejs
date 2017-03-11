@@ -1,0 +1,23 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing common requirements'
+package-install-from-repos curl wget git subversion mercurial gnupg
+
+log 'Installing nodejs'
+curl -sL https://deb.nodesource.com/setup_7.x | bash -
+package-install-from-repos nodejs
+
+log "Customizing npm prefix for global installs for user $NON_ROOT_USER"
+NPM_CONFIG_COMMAND="$(cat <<-COMMANDEOF
+  mkdir -p ~/.npm-global
+  npm config set prefix '~/.npm-global'
+  export PATH=~/.npm-global/bin:\$PATH >> ~/.profile
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$NPM_CONFIG_COMMAND"
