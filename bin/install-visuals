@@ -8,11 +8,6 @@ require-non-root-user
 
 reset-list
 
-if [[ "$(lsb_release -cs)" != 'xenial' ]]; then
-  package-repo-add 'ppa:peterlevi/ppa'
-fi
-add-to-list variety
-
 package-repo-add 'ppa:numix/ppa'
 add-to-list numix-icon-theme-circle numix-icon-theme
 
