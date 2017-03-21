@@ -17,7 +17,7 @@ log "Customizing npm prefix for global installs for user $NON_ROOT_USER"
 NPM_CONFIG_COMMAND="$(cat <<-COMMANDEOF
   mkdir -p ~/.npm-global
   npm config set prefix '~/.npm-global'
-  echo 'export PATH="~/.npm-global/bin:\$PATH"' >> ~/.profile
+  echo 'export PATH="\$HOME/.npm-global/bin:\$PATH"' >> ~/.profile
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$NPM_CONFIG_COMMAND"
