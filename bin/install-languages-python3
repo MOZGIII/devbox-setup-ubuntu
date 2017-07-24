@@ -1,0 +1,10 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing additional python 3 packages from the repos'
+package-install-from-repos python3-pip python3-dev python-virtualenv
