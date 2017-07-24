@@ -10,7 +10,7 @@ log 'Installing common requirements'
 package-install-from-repos curl wget git subversion mercurial gnupg
 
 log 'Installing nodejs'
-curl -sL https://deb.nodesource.com/setup_7.x | bash -
+curl -sL https://deb.nodesource.com/setup_8.x | bash -
 package-install-from-repos nodejs
 
 log "Customizing npm prefix for global installs for user $NON_ROOT_USER"
