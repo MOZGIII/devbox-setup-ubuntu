@@ -1,0 +1,22 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing python 3 packages from the repos'
+package-install-from-repos python3-pip python3-dev python-virtualenv
+
+log "Create python 3 virtualenv at ~/tensorflow for user $NON_ROOT_USER"
+run_command_as_user "$NON_ROOT_USER" "virtualenv --system-site-packages -p python3 \$HOME/tensorflow"
+
+log "Install tensorflow into the virtualenv for user $NON_ROOT_USER"
+TENSORFLOW_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  source \$HOME/tensorflow/bin/activate
+  pip3 install --upgrade tensorflow
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$TENSORFLOW_INSTALL_COMMAND"
+
