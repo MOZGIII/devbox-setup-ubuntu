@@ -145,3 +145,20 @@ function reset-list {
 function add-to-list {
   LIST="$LIST $@"
 }
+
+function md5-check {
+  EXPECTED=$1
+  shift
+
+  FILENAME=$1
+  shift
+
+  ACTUAL="$(md5sum -b "$FILENAME" | awk '{ print $1 }')"
+
+  if [[ "$EXPECTED" != "$ACTUAL" ]]; then
+    echo "File $FILENAME MD5 hashsum mismatch!"
+    echo "Expected: $EXPECTED"
+    echo "Actual:   $ACTUAL"
+    exit 3
+  fi
+}
