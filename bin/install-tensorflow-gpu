@@ -1,0 +1,49 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Install cuda 8.0.61-1 repo for Ubuntu 16.04 amd64'
+REPO_TMP_DIR="$(mktemp -d)"
+trap "{ rm -rf $REPO_TMP_DIR; }" EXIT
+wget 'https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb' -O "$REPO_TMP_DIR/cuda-repo.deb"
+md5-check 1f4dffe1f79061827c807e0266568731 "$REPO_TMP_DIR/cuda-repo.deb"
+dpkg -i "$REPO_TMP_DIR/cuda-repo.deb"
+apt-get update
+
+log 'Install cuda support'
+package-install-from-repos cuda libcupti-dev
+
+log 'Install cuDNN support'
+# CUDNN_TMP_DIR="$(mktemp -d)"
+# trap "{ rm -rf $REPO_TMP_DIR; }" EXIT
+# CUDNN_BASE_URL="https://developer.nvidia.com/compute/machine-learning/cudnn/secure/v6/prod/8.0_20170307/Ubuntu16_04_x64"
+# wget "${CUDNN_BASE_URL}/libcudnn6_6.0.20-1+cuda8.0_amd64-deb" -O "$CUDNN_TMP_DIR/libcudnn6_6.0.20-1+cuda8.0_amd64-deb"
+# md5-check 00000000000000000000000000000000 "$CUDNN_TMP_DIR/libcudnn6_6.0.20-1+cuda8.0_amd64-deb"
+# wget "${CUDNN_BASE_URL}/libcudnn6-dev_6.0.20-1+cuda8.0_amd64-deb" -O "$CUDNN_TMP_DIR/libcudnn6-dev_6.0.20-1+cuda8.0_amd64-deb"
+# md5-check 00000000000000000000000000000000 "$CUDNN_TMP_DIR/libcudnn6-dev_6.0.20-1+cuda8.0_amd64-deb"
+# dpkg -i "$CUDNN_TMP_DIR/libcudnn6_6.0.20-1+cuda8.0_amd64-deb" "$CUDNN_TMP_DIR/libcudnn6-dev_6.0.20-1+cuda8.0_amd64-deb"
+
+echo '================================================================================'
+echo '================================== WARNING!!! =================================='
+echo '================ Download and install cuDNN manually from here: ================'
+echo '=============== https://developer.nvidia.com/rdp/cudnn-download  ==============='
+echo '================================================================================'
+
+log 'Installing python 3 packages from the repos'
+package-install-from-repos python3-pip python3-dev python-virtualenv
+
+log "Create python 3 virtualenv at ~/tensorflow for user $NON_ROOT_USER"
+run_command_as_user "$NON_ROOT_USER" 'virtualenv --system-site-packages -p python3 \$HOME/tensorflow'
+
+log "Install tensorflow into the virtualenv for user $NON_ROOT_USER"
+TENSORFLOW_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  source \$HOME/tensorflow/bin/activate
+  pip3 install --upgrade tensorflow-gpu
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$TENSORFLOW_INSTALL_COMMAND"
+
