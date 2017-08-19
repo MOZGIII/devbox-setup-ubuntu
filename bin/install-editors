@@ -8,6 +8,9 @@ require-root
 package-repo-add 'ppa:webupd8team/atom'
 package-repo-add 'ppa:webupd8team/sublime-text-3'
 
+curl 'https://packages.microsoft.com/keys/microsoft.asc' | gpg --dearmor > '/etc/apt/trusted.gpg.d/microsoft.gpg'
+echo 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' > '/etc/apt/sources.list.d/vscode.list'
+
 package-list-update
 
-package-install-from-repos atom sublime-text-installer vim
+package-install-from-repos atom sublime-text-installer vim code
