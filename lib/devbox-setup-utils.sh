@@ -1,3 +1,4 @@
+#!/bin/bash
 function devbox-setup-init {
   set -e
 
