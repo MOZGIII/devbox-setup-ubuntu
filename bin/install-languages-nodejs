@@ -21,3 +21,9 @@ NPM_CONFIG_COMMAND="$(cat <<-COMMANDEOF
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$NPM_CONFIG_COMMAND"
+
+log 'Install yarn'
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list
+package-list-update
+package-install-from-repos yarn
