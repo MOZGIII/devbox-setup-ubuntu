@@ -1,0 +1,20 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing apt-transport-https'
+package-install-from-repos apt-transport-https lsb-release
+
+log 'Installing google apt key'
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+log 'Installing kubernetes apt repo'
+echo "deb http://apt.kubernetes.io/ kubernetes-$(lsb_release -cs) main" | tee /etc/apt/sources.list.d/kubernetes.list
+
+log 'Installing kubectl'
+package-list-update
+package-install-from-repos kubectl
