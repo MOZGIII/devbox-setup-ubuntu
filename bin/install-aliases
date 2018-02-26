@@ -1,0 +1,14 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log "Creating aliases for user $NON_ROOT_USER"
+ALIASES_COMMAND="$(cat <<-COMMANDEOF
+  echo 'alias gg="git gui &"' >> ~/.aliases
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$ALIASES_COMMAND"
