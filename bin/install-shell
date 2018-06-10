@@ -39,7 +39,7 @@ CODE
 fi
 
 # Customize theme
-sed -i 's/^ZSH_THEME="robbyrussell"$/& # extended for ssh support\n\nif [[ ! -z "$SSH_CONNECTION"; ]] then\n  ZSH_THEME="ys"\nfi/' "$ZSHRC_PATH"
+sed -i 's/^ZSH_THEME="robbyrussell"$/& # extended for ssh support\n\nif [[ ! -z "$SSH_CONNECTION" ]]; then\n  ZSH_THEME="ys"\nfi/' "$ZSHRC_PATH"
 
 # Set shell for X11 sessions
 log "Configuring user shell to be used in X11 sessions for user $NON_ROOT_USER"
