@@ -9,7 +9,7 @@ This set of scripts expects you to have `bash`, `wget`, `curl` and other core ut
 ## Installation and usage
 
 Clone the repo somewhere and run scripts you like from `bin`.
-Use `sudo`. Some scripts require non-root user - you can specify it manually with `--non-root-user [user]` option or in will be deducted form `$SUDO_USER`.
+Use `sudo`. Some scripts require non-root user - you can specify it manually with `--non-root-user [user]` option or it will be deducted form `$SUDO_USER`.
 
 ### Quick install
 
