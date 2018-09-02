@@ -1,0 +1,17 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing common requirements'
+package-install-from-repos curl git
+
+log "Installing rustup for $NON_ROOT_USER"
+RUSTUP_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  curl https://sh.rustup.rs -sSf | sh -s -- -y
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$RUSTUP_INSTALL_COMMAND"
