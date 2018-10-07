@@ -12,7 +12,7 @@ package-install-from-repos apt-transport-https
 curl -sL 'https://packagecloud.io/AtomEditor/atom/gpgkey' | apt-key add -
 echo 'deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main' > '/etc/apt/sources.list.d/atom.list'
 
-curl -sL 'https://packages.microsoft.com/keys/microsoft.asc' | gpg --dearmor > '/etc/apt/trusted.gpg.d/microsoft.gpg'
+curl -sL 'https://packages.microsoft.com/keys/microsoft.asc' | apt-key add -
 echo 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' > '/etc/apt/sources.list.d/vscode.list'
 
 package-list-update
