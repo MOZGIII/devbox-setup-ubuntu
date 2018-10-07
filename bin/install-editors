@@ -13,4 +13,4 @@ echo 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' 
 
 package-list-update
 
-package-install-from-repos atom sublime-text-installer vim code
+package-install-from-repos atom vim code
