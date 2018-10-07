@@ -11,12 +11,14 @@ package-install-from-repos wget git subversion mercurial tar
 log 'Clearing go installation path'
 rm -rf /usr/local/go
 
-log 'Downloading and installing go'
+GO_VERSION="1.11.1"
+
+log "Downloading and installing go $GO_VERSION"
 TMPDIR="$(mktemp -d)"
 if [[ -z "$TMPDIR" ]] || [[ "$TMPDIR" == "/" ]] || [[ "$TMPDIR" == "/tmp" ]]; then
   fatal "Unable to generate temp directory, got $TMPDIR"
 fi
-wget 'https://dl.google.com/go/go1.11.linux-amd64.tar.gz' -O "$TMPDIR/go.tar.gz"
+wget "https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz" -O "$TMPDIR/go.tar.gz"
 tar -C /usr/local -xzf "$TMPDIR/go.tar.gz"
 rm -f "$TMPDIR/go.tar.gz"
 rmdir "$TMPDIR"
