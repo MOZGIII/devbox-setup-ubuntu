@@ -1,0 +1,28 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Uninstalling older docker versions'
+apt-get remove docker docker-engine docker.io
+
+log 'Installing common requirements'
+package-install-from-repos apt-transport-https ca-certificates curl
+
+log 'Adding docker gpg key for apt'
+curl -fsSL 'https://download.docker.com/linux/ubuntu/gpg' | apt-key add -
+
+log 'Adding docker apt repository'
+echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" > '/etc/apt/sources.list.d/docker.list'
+
+log 'Updating packages list'
+package-list-update
+
+log 'Installing docker-ce'
+package-install-from-repos docker-ce
+
+log "Adding user $NON_ROOT_USER to docker group"
+usermod -aG docker "$NON_ROOT_USER"
