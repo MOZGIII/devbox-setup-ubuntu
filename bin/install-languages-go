@@ -4,6 +4,7 @@ source ../lib/devbox-setup-utils.sh
 devbox-setup-init
 
 require-root
+require-non-root-user
 
 log 'Installing common requirements'
 package-install-from-repos wget git subversion mercurial tar
@@ -25,3 +26,11 @@ rmdir "$TMPDIR"
 
 log 'Writing /etc/profile.d/go.sh'
 echo 'export PATH=$PATH:/usr/local/go/bin' > /etc/profile.d/go.sh
+
+log "Writing GOPATH and PATH extension for user $NON_ROOT_USER"
+GOPATH_CONFIG_COMMAND="$(cat <<-COMMANDEOF
+  echo 'export GOPATH="\$HOME/go"' >> ~/.profile
+  echo 'export PATH="\$GOPATH/bin:\$PATH"' >> ~/.profile
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$GOPATH_CONFIG_COMMAND"
