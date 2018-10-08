@@ -9,7 +9,7 @@ require-non-root-user
 log 'Installing common requirements'
 package-install-from-repos curl wget git subversion mercurial gnupg
 
-log 'Installing nodejs'
+log 'Installing Node.js v8.x'
 curl -sL https://deb.nodesource.com/setup_8.x | bash -
 package-install-from-repos nodejs
 
