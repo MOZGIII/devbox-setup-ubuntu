@@ -1,0 +1,29 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing common requirements'
+package-install-from-repos curl wget git subversion mercurial gnupg
+
+log 'Installing Node.js v10.x'
+curl -sL https://deb.nodesource.com/setup_10.x | bash -
+package-install-from-repos nodejs
+
+log "Customizing npm prefix for global installs for user $NON_ROOT_USER"
+NPM_CONFIG_COMMAND="$(cat <<-COMMANDEOF
+  mkdir -p ~/.npm-global
+  npm config set prefix '~/.npm-global'
+  echo 'export PATH="\$HOME/.npm-global/bin:\$PATH"' >> ~/.profile
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$NPM_CONFIG_COMMAND"
+
+log 'Install yarn'
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list
+package-list-update
+package-install-from-repos yarn
