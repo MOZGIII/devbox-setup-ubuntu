@@ -12,9 +12,31 @@ package-install-from-repos curl wget git subversion mercurial gnupg
 log "Installing ruby with rvm for $NON_ROOT_USER"
 RVM_INSTALL_COMMAND="$(cat <<-COMMANDEOF
   gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-  \curl -sSL https://get.rvm.io | bash -s stable --ruby
-  source "$HOME/.rvm/scripts/rvm"
-  rvm use --default ruby
+  \curl -sSL https://get.rvm.io | bash -s stable
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$RVM_INSTALL_COMMAND"
+
+log 'Install ruby instllation requirements'
+package-install-from-repos \
+  gawk \
+  bison \
+  libffi-dev \
+  libgdbm-dev \
+  libncurses5-dev \
+  libsqlite3-dev \
+  libtool \
+  libyaml-dev \
+  sqlite3 \
+  zlib1g-dev \
+  libgmp-dev \
+  libreadline-dev \
+  libssl-dev
+
+RUBY_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  source "$HOME/.rvm/scripts/rvm"
+  rvm install ruby --autolibs=read-fail
+  rvm use --default ruby
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$RUBY_INSTALL_COMMAND"
