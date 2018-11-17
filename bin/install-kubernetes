@@ -12,8 +12,11 @@ package-install-from-repos apt-transport-https lsb-release
 log 'Installing google apt key'
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
+log 'Choosing kubernetes repo'
+REPO_RELEASE="kubernetes-xenial"
+
 log 'Installing kubernetes apt repo'
-echo "deb http://apt.kubernetes.io/ kubernetes-$(lsb_release -cs) main" | tee /etc/apt/sources.list.d/kubernetes.list
+echo "deb http://apt.kubernetes.io/ $REPO_RELEASE main" | tee /etc/apt/sources.list.d/kubernetes.list
 
 log 'Installing kubectl'
 package-list-update
