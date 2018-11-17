@@ -1,0 +1,31 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+
+log "Preparing installtion location for user $NON_ROOT_USER"
+PREPARE_BIN_COMMAND="$(cat <<-COMMANDEOF
+  mkdir -p ~/bin
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$PREPARE_BIN_COMMAND"
+
+BIN_PATH="$(eval echo ~"$NON_ROOT_USER"/bin)"
+
+JQ_VERSION="jq-1.6"
+
+log "Downloading and installing jq $JQ_VERSION for user $NON_ROOT_USER"
+TMPDIR="$(mktemp -d)"
+if [[ -z "$TMPDIR" ]] || [[ "$TMPDIR" == "/" ]] || [[ "$TMPDIR" == "/tmp" ]]; then
+  fatal "Unable to generate temp directory, got $TMPDIR"
+fi
+wget "https://github.com/stedolan/jq/releases/download/$JQ_VERSION/jq-linux64" -O "$TMPDIR/jq"
+cp "$TMPDIR/jq" "$BIN_PATH/jq"
+chown "$NON_ROOT_USER:$NON_ROOT_USER" "$BIN_PATH/jq"
+chmod 0755 "$BIN_PATH/jq"
+rm -f "$TMPDIR/jq"
+rmdir "$TMPDIR"
