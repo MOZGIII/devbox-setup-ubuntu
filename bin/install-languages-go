@@ -12,7 +12,7 @@ package-install-from-repos wget git subversion mercurial tar
 log 'Clearing go installation path'
 rm -rf /usr/local/go
 
-GO_VERSION="1.11.1"
+GO_VERSION="1.11.2"
 
 log "Downloading and installing go $GO_VERSION"
 TMPDIR="$(mktemp -d)"
