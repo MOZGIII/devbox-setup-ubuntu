@@ -1,0 +1,31 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log "Preparing installtion location for user $NON_ROOT_USER"
+PREPARE_BIN_COMMAND="$(cat <<-COMMANDEOF
+  mkdir -p ~/bin
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$PREPARE_BIN_COMMAND"
+
+BIN_PATH="$(eval echo ~"$NON_ROOT_USER"/bin)"
+
+SHELLCHECK_VERSION="stable"
+
+log "Downloading and installing shellcheck $SHELLCHECK_VERSION for user $NON_ROOT_USER"
+TMPDIR="$(mktemp -d)"
+if [[ -z "$TMPDIR" ]] || [[ "$TMPDIR" == "/" ]] || [[ "$TMPDIR" == "/tmp" ]]; then
+  fatal "Unable to generate temp directory, got $TMPDIR"
+fi
+wget "https://storage.googleapis.com/shellcheck/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" -O "$TMPDIR/shellcheck.tar.xz"
+tar -C "$TMPDIR" --xz -x "shellcheck-${SHELLCHECK_VERSION}/shellcheck" -vf "$TMPDIR/shellcheck.tar.xz"
+cp "$TMPDIR/shellcheck-${SHELLCHECK_VERSION}/shellcheck" "$BIN_PATH/shellcheck"
+chown "$NON_ROOT_USER:$NON_ROOT_USER" "$BIN_PATH/shellcheck"
+chmod 0755 "$BIN_PATH/shellcheck"
+rm -f "$TMPDIR/shellcheck-${SHELLCHECK_VERSION}/shellcheck" "$TMPDIR/shellcheck.tar.xz"
+rmdir "$TMPDIR/shellcheck-${SHELLCHECK_VERSION}" "$TMPDIR"
