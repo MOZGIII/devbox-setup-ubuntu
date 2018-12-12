@@ -3,9 +3,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 source ../lib/devbox-setup-utils.sh
 devbox-setup-init
 
-VAGRANT_VERSION='1.8.6/vagrant_1.8.6_x86_64'
-VIRTUALBOX_VERSION='virtualbox-5.1'
-CHEFDK_VERSION='1.0.3/ubuntu/16.04/chefdk_1.0.3-1_amd64'
+VAGRANT_VERSION='2.2.2/vagrant_2.2.2_x86_64'
+VIRTUALBOX_VERSION='virtualbox-5.2'
+CHEFDK_VERSION='3.5.13/ubuntu/18.04/chefdk_3.5.13-1_amd64'
 
 VAGRANT_PLUGINS='vagrant-vbguest vagrant-omnibus vagrant-berkshelf vagrant-cachier'
 
