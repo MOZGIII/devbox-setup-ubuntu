@@ -12,6 +12,7 @@ VAGRANT_PLUGINS='vagrant-vbguest vagrant-omnibus vagrant-berkshelf vagrant-cachi
 require-root
 require-non-root-user
 
+wget -q 'https://www.virtualbox.org/download/oracle_vbox_2016.asc' -O- | apt-key add -
 wget -q 'https://www.virtualbox.org/download/oracle_vbox.asc' -O- | apt-key add -
 package-repo-add "deb http://download.virtualbox.org/virtualbox/debian $DISTRIB_CODENAME contrib"
 package-list-update
