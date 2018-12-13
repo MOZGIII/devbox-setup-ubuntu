@@ -5,8 +5,8 @@ devbox-setup-init
 
 require-root
 
-DOCKER_COMPOSE_VERSION="1.22.0"
-EXPECTED_SHA256="f679a24b93f291c3bffaff340467494f388c0c251649d640e661d509db9d57e9"
+DOCKER_COMPOSE_VERSION="1.23.2"
+EXPECTED_SHA256="4d618e19b91b9a49f36d041446d96a1a0a067c676330a4f25aca6bbd000de7a9"
 
 log 'Preparing temporary dirtectoy'
 TMPDIR="$(mktemp -d)"
