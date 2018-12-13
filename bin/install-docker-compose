@@ -15,7 +15,7 @@ if [[ -z "$TMPDIR" ]] || [[ "$TMPDIR" == "/" ]] || [[ "$TMPDIR" == "/tmp" ]]; th
 fi
 
 log "Downloading docker-compose $DOCKER_COMPOSE_VERSION"
-curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" \
+curl -fsSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" \
   -o "$TMPDIR/docker-compose"
 
 log "Performing integrity check"
