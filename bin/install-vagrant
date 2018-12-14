@@ -7,7 +7,7 @@ VAGRANT_VERSION='2.2.2/vagrant_2.2.2_x86_64'
 VIRTUALBOX_VERSION='virtualbox-5.2'
 CHEFDK_VERSION='3.5.13/ubuntu/18.04/chefdk_3.5.13-1_amd64'
 
-VAGRANT_PLUGINS='vagrant-vbguest vagrant-omnibus vagrant-berkshelf vagrant-cachier'
+VAGRANT_PLUGINS='vagrant-vbguest vagrant-omnibus vagrant-berkshelf vagrant-cachier vagrant-libvirt'
 
 require-root
 require-non-root-user
@@ -20,6 +20,9 @@ package-install-from-repos "$VIRTUALBOX_VERSION"
 
 package-install-from-web-with-cache "https://releases.hashicorp.com/vagrant/$VAGRANT_VERSION.deb" "/tmp/devbox-setup/vagrant.deb"
 package-install-from-web-with-cache "https://packages.chef.io/files/stable/chefdk/$CHEFDK_VERSION.deb" "/tmp/devbox-setup/chefdk.deb"
+
+log 'Install plugin dependencies'
+package-install-from-repos libvirt-dev
 
 log 'Installing vagrant plugins'
 run_command_as_user "$NON_ROOT_USER" "vagrant plugin install $VAGRANT_PLUGINS"
