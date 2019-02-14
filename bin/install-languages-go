@@ -25,7 +25,7 @@ rm -f "$TMPDIR/go.tar.gz"
 rmdir "$TMPDIR"
 
 log 'Writing /etc/profile.d/go.sh'
-echo 'export PATH=$PATH:/usr/local/go/bin' > /etc/profile.d/go.sh
+echo 'export PATH="$PATH:/usr/local/go/bin"' > /etc/profile.d/go.sh
 
 log "Writing GOPATH and PATH extension for user $NON_ROOT_USER"
 GOPATH_CONFIG_COMMAND="$(cat <<-COMMANDEOF
