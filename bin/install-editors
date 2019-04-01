@@ -17,4 +17,4 @@ echo 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' 
 
 package-list-update
 
-package-install-from-repos atom vim code
+package-install-from-repos atom vim code fonts-firacode
