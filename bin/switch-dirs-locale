@@ -19,7 +19,7 @@ if [ ! -f "${HOME}/.config/user-dirs.locale" ]; then
   xdg-user-dirs-update --force
 fi
 
-if [ "$(cat ${HOME}/.config/user-dirs.locale)x" == "Cx" ]; then
+if [ "$(cat "${HOME}/.config/user-dirs.locale")x" == "Cx" ]; then
   echo "User-dirs are already in C locale, no need to migrate"
   exit
 fi
@@ -56,4 +56,4 @@ LC_ALL=C xdg-user-dirs-update --force
 rm "${HOME}/.config/user-dirs.locale"
 COMMANDEOF
 )"
-run_command_as_user "$NON_ROOT_USER" "$SWITCH_LOCALE_COMMAND"
+run_command_as_user "$NON_ROOT_USER" bash - < "$SWITCH_LOCALE_COMMAND"
