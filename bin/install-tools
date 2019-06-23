@@ -14,7 +14,7 @@ reset-list
 add-to-list git git-gui git-svn git-cola python-pyinotify
 
 # Other VCS
-add-to-list subversion mercurial
+add-to-list subversion mercurial bzr
 
 # Downloaders
 add-to-list wget curl
