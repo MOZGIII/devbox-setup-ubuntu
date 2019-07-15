@@ -1,0 +1,33 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing dependencies'
+package-install-from-repos bash curl git unzip xz-utils wget tar libglu1-mesa
+
+FULLTER_CHANNEL="stable"
+FLUTTER_ARCHIVE="flutter_linux_v1.7.8+hotfix.3-stable.tar.xz"
+FLUTTER_URL="https://storage.googleapis.com/flutter_infra/releases/$FULLTER_CHANNEL/linux/$FLUTTER_ARCHIVE"
+
+log "Downloading and installing $FLUTTER_ARCHIVE for user $NON_ROOT_USER"
+FLUTTER_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  set -euo pipefail
+  TMPDIR="\$(mktemp -d)"
+  if [[ -z "\$TMPDIR" ]] || [[ "\$TMPDIR" == "/" ]] || [[ "\$TMPDIR" == "/tmp" ]]; then
+    fatal "Unable to generate temp directory, got \$TMPDIR"
+  fi
+  wget "$FLUTTER_URL" -O "\$TMPDIR/$FLUTTER_ARCHIVE"
+  rm -rf "\$HOME/.local/flutter"
+  tar -C "\$HOME/.local" -xf "\$TMPDIR/$FLUTTER_ARCHIVE"
+  rm -f "\$TMPDIR/$FLUTTER_ARCHIVE"
+  rmdir "\$TMPDIR"
+  mkdir -p "\$HOME/bin"
+  ln -sf "\$HOME/.local/flutter/bin/flutter" "\$HOME/bin/flutter"
+  "\$HOME/bin/flutter" precache
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$FLUTTER_INSTALL_COMMAND"
