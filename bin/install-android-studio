@@ -1,0 +1,40 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing common requirements'
+package-install-from-repos wget git subversion mercurial tar
+
+log 'Installing dependencies'
+package-install-from-repos \
+  lib32stdc++6 unzip \
+  libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+
+log 'Installing KVM for accelerated Android Emulator'
+package-install-from-repos qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
+
+ANDROID_STUDIO_VERSION="3.4.2.0"
+ANDROID_STUDIO_ARCHIVE="android-studio-ide-183.5692245-linux.tar.gz"
+ANDROID_STUDIO_URL="https://dl.google.com/dl/android/studio/ide-zips/$ANDROID_STUDIO_VERSION/$ANDROID_STUDIO_ARCHIVE"
+
+log "Downloading and installing $ANDROID_STUDIO_ARCHIVE ($ANDROID_STUDIO_VERSION) for user $NON_ROOT_USER"
+ANDROID_STUDIO_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  set -euo pipefail
+  TMPDIR="\$(mktemp -d)"
+  if [[ -z "\$TMPDIR" ]] || [[ "\$TMPDIR" == "/" ]] || [[ "\$TMPDIR" == "/tmp" ]]; then
+    fatal "Unable to generate temp directory, got \$TMPDIR"
+  fi
+  wget "$ANDROID_STUDIO_URL" -O "\$TMPDIR/$ANDROID_STUDIO_ARCHIVE"
+  rm -rf "\$HOME/.local/android-studio"
+  tar -C "\$HOME/.local" -xf "\$TMPDIR/$ANDROID_STUDIO_ARCHIVE"
+  rm -f "\$TMPDIR/$ANDROID_STUDIO_ARCHIVE"
+  rmdir "\$TMPDIR"
+  mkdir -p "\$HOME/bin"
+  ln -sf "\$HOME/.local/android-studio/bin/studio.sh" "\$HOME/bin/studio"
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$ANDROID_STUDIO_INSTALL_COMMAND"
