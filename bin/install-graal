@@ -1,0 +1,36 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing common requirements'
+package-install-from-repos wget git subversion mercurial tar
+
+log 'Installing build dependencies for TruffleRuby specificly (may solve other reqs too)'
+package-install-from-repos libssl-dev libz-dev make clang llvm
+
+GRAAL_VERSION="19.1.0"
+GRAAL_RELEASE="vm-$GRAAL_VERSION"
+GRAAL_ARCHIVE="graalvm-ce-linux-amd64-$GRAAL_VERSION.tar.gz"
+GRAAL_URL="https://github.com/oracle/graal/releases/download/$GRAAL_RELEASE/$GRAAL_ARCHIVE"
+
+log "Downloading and installing $GRAAL_ARCHIVE ($GRAAL_RELEASE) for user $NON_ROOT_USER"
+INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  set -euo pipefail
+  TMPDIR="\$(mktemp -d)"
+  if [[ -z "\$TMPDIR" ]] || [[ "\$TMPDIR" == "/" ]] || [[ "\$TMPDIR" == "/tmp" ]]; then
+    fatal "Unable to generate temp directory, got \$TMPDIR"
+  fi
+  wget "$GRAAL_URL" -O "\$TMPDIR/$GRAAL_ARCHIVE"
+  rm -rf "\$HOME/.local/graal"
+  mkdir -p "\$HOME/.local/graal"
+  tar -C "\$HOME/.local/graal" -xf "\$TMPDIR/$GRAAL_ARCHIVE" --strip-components 1
+  rm -f "\$TMPDIR/$GRAAL_ARCHIVE"
+  rmdir "\$TMPDIR"
+  echo 'export PATH="\$HOME/.local/graal/bin:\$PATH"' >> ~/.profile
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$INSTALL_COMMAND"
