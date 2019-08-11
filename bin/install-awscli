@@ -1,0 +1,18 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing additional Python 3 packages from the repos'
+package-list-update
+package-install-from-repos python3-pip python3-dev
+
+log "Installing awscli via pip3 for user $NON_ROOT_USER"
+INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  pip3 install awscli
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$INSTALL_COMMAND"
