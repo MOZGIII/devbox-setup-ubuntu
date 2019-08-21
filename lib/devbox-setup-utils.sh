@@ -163,3 +163,12 @@ function md5-check {
     exit 3
   fi
 }
+
+function latest-github-release {
+  REPO="$1"
+  shift
+
+  curl -sSL "https://api.github.com/repos/$REPO/releases/latest" |
+    grep '"tag_name":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+}
