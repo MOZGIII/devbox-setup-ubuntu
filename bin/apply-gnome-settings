@@ -1,0 +1,14 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log "Applying GNOME settings for user $NON_ROOT_USER"
+COMMAND="$(cat <<-COMMANDEOF
+  gsettings set org.gnome.desktop.input-sources xkb-options "['terminate:ctrl_alt_bksp', 'grp:alt_shift_toggle']"
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$COMMAND"
