@@ -36,6 +36,7 @@ ANDROID_STUDIO_INSTALL_COMMAND="$(cat <<-COMMANDEOF
   mkdir -p "\$HOME/bin"
   ln -sf "\$HOME/.local/android-studio/bin/studio.sh" "\$HOME/bin/android-studio"
   echo 'export ANDROID_SDK_ROOT="\$HOME/Android/Sdk"' >> ~/.profile
+  echo 'export PATH="\$ANDROID_SDK_ROOT/platform-tools:\$PATH"' >> ~/.profile
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$ANDROID_STUDIO_INSTALL_COMMAND"
