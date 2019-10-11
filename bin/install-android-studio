@@ -17,8 +17,8 @@ package-install-from-repos \
 log 'Installing KVM for accelerated Android Emulator'
 package-install-from-repos qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
 
-ANDROID_STUDIO_VERSION="3.4.2.0"
-ANDROID_STUDIO_ARCHIVE="android-studio-ide-183.5692245-linux.tar.gz"
+ANDROID_STUDIO_VERSION="3.5.1.0"
+ANDROID_STUDIO_ARCHIVE="android-studio-ide-191.5900203-linux.tar.gz"
 ANDROID_STUDIO_URL="https://dl.google.com/dl/android/studio/ide-zips/$ANDROID_STUDIO_VERSION/$ANDROID_STUDIO_ARCHIVE"
 
 log "Downloading and installing $ANDROID_STUDIO_ARCHIVE ($ANDROID_STUDIO_VERSION) for user $NON_ROOT_USER"
