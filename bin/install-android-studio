@@ -34,7 +34,7 @@ ANDROID_STUDIO_INSTALL_COMMAND="$(cat <<-COMMANDEOF
   rm -f "\$TMPDIR/$ANDROID_STUDIO_ARCHIVE"
   rmdir "\$TMPDIR"
   mkdir -p "\$HOME/bin"
-  ln -sf "\$HOME/.local/android-studio/bin/studio.sh" "\$HOME/bin/studio"
+  ln -sf "\$HOME/.local/android-studio/bin/studio.sh" "\$HOME/bin/android-studio"
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$ANDROID_STUDIO_INSTALL_COMMAND"
