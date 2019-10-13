@@ -12,9 +12,9 @@ package-install-from-repos curl git
 log "Installing rustup for $NON_ROOT_USER"
 RUSTUP_INSTALL_COMMAND="$(cat <<-COMMANDEOF
   curl https://sh.rustup.rs -sSf | sh -s -- -y
-  rustup component add rls rust-analysis rust-src rustfmt
+  rustup component add rls rust-analysis rust-src rustfmt clippy
   rustup install nightly
-  rustup component add rls rust-analysis rust-src rustfmt --toolchain nightly
+  rustup component add rls rust-analysis rust-src rustfmt clippy --toolchain nightly
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$RUSTUP_INSTALL_COMMAND"
