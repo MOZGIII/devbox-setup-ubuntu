@@ -1,0 +1,36 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+reset-list
+
+add-to-list git python-pyinotify
+add-to-list git-gui git-svn git-cola tig qgit
+
+log 'Adding git-lfs repo'
+curl -sL 'https://packagecloud.io/github/git-lfs/gpgkey' | apt-key add -
+echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release -cs) main" > '/etc/apt/sources.list.d/github_git-lfs.list'
+add-to-list git-lfs
+
+log 'Adding git-secret repo'
+curl -sL 'https://api.bintray.com/users/sobolevn/keys/gpg/public.key' | apt-key add -
+echo 'deb https://dl.bintray.com/sobolevn/deb git-secret main' > '/etc/apt/sources.list.d/git-secret.list'
+add-to-list git-secret
+
+log 'Updating package list'
+package-list-update
+
+log 'Installing git packages'
+
+package-install-from-repos $LIST
+
+log "Setting git configuration for user $NON_ROOT_USER"
+SETTINGS_COMMAND="$(cat <<-COMMANDEOF
+  git config --global push.default current
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$SETTINGS_COMMAND"
