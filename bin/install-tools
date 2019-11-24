@@ -10,9 +10,6 @@ package-list-update
 # Start with empty list
 reset-list
 
-# GIT and stuff
-add-to-list git git-gui git-svn git-cola python-pyinotify
-
 # Other VCS
 add-to-list subversion mercurial bzr
 
