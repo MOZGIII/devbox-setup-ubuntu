@@ -9,13 +9,27 @@ require-non-root-user
 log 'Installing common requirements'
 package-install-from-repos curl wget git subversion mercurial gnupg
 
-log "Installing ruby with rvm for $NON_ROOT_USER"
-RVM_INSTALL_COMMAND="$(cat <<-COMMANDEOF
-  gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-  \curl -sSL https://get.rvm.io | bash -s stable
+log "Installing rbenv for $NON_ROOT_USER"
+RBENV_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  git clone https://github.com/rbenv/rbenv.git "\$HOME/.rbenv" && \
+
+  cd "\$HOME/.rbenv" && \
+  src/configure && \
+  make -C src && \
+  echo "Build complete" && \
+
+  mkdir -p "\$HOME/.rbenv/plugins" && \
+  git clone https://github.com/rbenv/ruby-build.git "\$HOME/.rbenv/plugins/ruby-build" &&\
+
+  echo 'export PATH="\$HOME/.rbenv/bin:\$PATH"' >> "\$HOME/.profile" && \
+  echo 'export PATH="\$HOME/.rbenv/bin:\$PATH"' >> "\$HOME/.bashrc" && \
+  echo 'export PATH="\$HOME/.rbenv/bin:\$PATH"' >> "\$HOME/.zshrc" && \
+  echo 'eval "\$(rbenv init -)"' >> "\$HOME/.zshrc" && \
+
+  echo "rbenv setup complete"
 COMMANDEOF
 )"
-run_command_as_user "$NON_ROOT_USER" "$RVM_INSTALL_COMMAND"
+run_command_as_user "$NON_ROOT_USER" "$RBENV_INSTALL_COMMAND"
 
 log 'Install ruby instllation requirements'
 package-install-from-repos \
@@ -34,9 +48,9 @@ package-install-from-repos \
   libssl-dev
 
 RUBY_INSTALL_COMMAND="$(cat <<-COMMANDEOF
-  source "$HOME/.rvm/scripts/rvm"
-  rvm install ruby --autolibs=read-fail
-  rvm use --default ruby
+  eval "\$("$HOME/.rbenv/bin/rbenv" init -)"
+  LAST_RUBY_VERSION="\$(rbenv install --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\$' | sort -n | tail -n 1)"
+  rbenv install "\$LAST_RUBY_VERSION"
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$RUBY_INSTALL_COMMAND"
