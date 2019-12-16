@@ -17,5 +17,5 @@ echo "deb https://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main
 log 'Updating packages list'
 package-list-update
 
-log 'Installing postgresql-client-11 and libpq-dev'
-package-install-from-repos postgresql-client-11 libpq-dev
+log 'Installing postgresql-client and libpq-dev'
+package-install-from-repos postgresql-client libpq-dev
