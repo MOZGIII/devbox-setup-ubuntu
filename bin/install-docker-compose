@@ -5,17 +5,22 @@ devbox-setup-init
 
 require-root
 
-DOCKER_COMPOSE_VERSION="1.23.2"
-EXPECTED_SHA256="4d618e19b91b9a49f36d041446d96a1a0a067c676330a4f25aca6bbd000de7a9"
+PLATFORM="$(uname -s)-$(uname -m)"
 
-log 'Preparing temporary dirtectoy'
+log 'Determining latest docker compose version'
+DOCKER_COMPOSE_VERSION="$(github-latest "docker/compose")"
+
+log 'Determining the SHA256 for the latest version'
+EXPECTED_SHA256="$(curl -fsSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$PLATFORM.sha256" | cut -f1 -d' ')"
+
+log 'Preparing temporary directory'
 TMPDIR="$(mktemp -d)"
 if [[ -z "$TMPDIR" ]] || [[ "$TMPDIR" == "/" ]] || [[ "$TMPDIR" == "/tmp" ]]; then
   fatal "Unable to generate temp directory, got $TMPDIR"
 fi
 
-log "Downloading docker-compose $DOCKER_COMPOSE_VERSION"
-curl -fsSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" \
+log "Downloading docker-compose $DOCKER_COMPOSE_VERSION $EXPECTED_SHA256"
+curl -fsSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$PLATFORM" \
   -o "$TMPDIR/docker-compose"
 
 log "Performing integrity check"
