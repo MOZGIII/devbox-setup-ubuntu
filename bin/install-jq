@@ -16,7 +16,8 @@ run_command_as_user "$NON_ROOT_USER" "$PREPARE_BIN_COMMAND"
 
 BIN_PATH="$(eval echo ~"$NON_ROOT_USER"/bin)"
 
-JQ_VERSION="jq-1.6"
+log "Determining latest jq version"
+JQ_VERSION="$(github-latest "stedolan/jq")"
 
 log "Downloading and installing jq $JQ_VERSION for user $NON_ROOT_USER"
 TMPDIR="$(mktemp -d)"
