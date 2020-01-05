@@ -163,3 +163,20 @@ function md5-check {
     exit 3
   fi
 }
+
+function github-latest {
+  REPO="$1"
+  shift
+
+  curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" | \
+    python3 -c "$(cat <<-PYTHONEOF
+from sys import stdin
+from json import loads
+try:
+  value = loads(stdin.read())
+  print(value['tag_name'])
+except:
+  exit(1)
+PYTHONEOF
+)"
+}

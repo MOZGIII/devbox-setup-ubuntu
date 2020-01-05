@@ -21,3 +21,41 @@ echo "deb http://apt.kubernetes.io/ $REPO_RELEASE main" | tee /etc/apt/sources.l
 log 'Installing kubectl'
 package-list-update
 package-install-from-repos kubectl
+
+log 'Deternining latest krew version'
+KREW_VERSION="$(github-latest "kubernetes-sigs/krew")"
+
+log "Installing krew $KREW_VERSION"
+KREW_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  set -euo pipefail
+  TMPDIR="\$(mktemp -d)"
+  if [[ -z "\$TMPDIR" ]] || [[ "\$TMPDIR" == "/" ]] || [[ "\$TMPDIR" == "/tmp" ]]; then
+    fatal "Unable to generate temp directory, got \$TMPDIR"
+  fi
+
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/$KREW_VERSION/krew.{tar.gz,yaml}"
+  tar zxvf krew.tar.gz
+  KREW="./krew-\$(uname | tr '[:upper:]' '[:lower:]')_amd64"
+  "\$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
+  "\$KREW" update
+
+  rm -rf "\$TMPDIR"
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$KREW_INSTALL_COMMAND"
+
+log "Configuring krew PATH extension for user $NON_ROOT_USER"
+KREW_PATH_COMMAND="$(cat <<-COMMANDEOF
+  echo 'export PATH="\$HOME/.krew/bin:\$PATH"' >> ~/.profile
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$KREW_PATH_COMMAND"
+
+log "Configuring KUBECONFIG collection dir for user $NON_ROOT_USER"
+KUBECONFIG_COMMAND="$(cat <<-COMMANDEOF
+  mkdir -p "\$HOME/.kube/config.d"
+  echo 'KUBECONFIG_EXTRAS="\$(find "\$HOME/.kube/config.d" -maxdepth 1 -type f -print0 | tr '\0' ':' | head -c -1)"' >> ~/.profile
+  echo 'export KUBECONFIG="\$HOME/.kube/config:\$KUBECONFIG_EXTRAS"' >> ~/.profile
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$KUBECONFIG_COMMAND"
