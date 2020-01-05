@@ -6,5 +6,5 @@ devbox-setup-init
 require-root
 require-non-root-user
 
-log 'Installing additional python 3 packages from the repos'
-package-install-from-repos python-pip python-dev python-virtualenv
+log 'Installing additional Python 2 packages from the repos'
+package-install-from-repos python python-pip python-dev python-virtualenv

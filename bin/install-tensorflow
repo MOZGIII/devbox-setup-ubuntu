@@ -6,10 +6,10 @@ devbox-setup-init
 require-root
 require-non-root-user
 
-log 'Installing python 3 packages from the repos'
-package-install-from-repos python3-pip python3-dev python-virtualenv
+log 'Installing Python 3 packages from the repos'
+package-install-from-repos python3 python3-pip python3-dev python-virtualenv
 
-log "Create python 3 virtualenv at ~/tensorflow for user $NON_ROOT_USER"
+log "Create Python 3 virtualenv at ~/tensorflow for user $NON_ROOT_USER"
 run_command_as_user "$NON_ROOT_USER" "virtualenv --system-site-packages -p python3 \$HOME/tensorflow"
 
 log "Install tensorflow into the virtualenv for user $NON_ROOT_USER"
