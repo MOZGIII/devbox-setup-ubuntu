@@ -12,7 +12,13 @@ package-install-from-repos curl git
 log "Installing rustup for $NON_ROOT_USER"
 RUSTUP_INSTALL_COMMAND="$(cat <<-COMMANDEOF
   curl https://sh.rustup.rs -sSf | sh -s -- -y --profile complete
-  rustup toolchain install nightly
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$RUSTUP_INSTALL_COMMAND"
+
+log "Installing an additional nightly toolchain rustup for $NON_ROOT_USER"
+NIGHTLY_RUST_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  rustup toolchain install nightly || rustup toolchain install nightly --profile default
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$NIGHTLY_RUST_INSTALL_COMMAND"
