@@ -9,6 +9,9 @@ require-non-root-user
 log "Applying GNOME settings for user $NON_ROOT_USER"
 COMMAND="$(cat <<-COMMANDEOF
   gsettings set org.gnome.desktop.input-sources xkb-options "['terminate:ctrl_alt_bksp', 'grp:alt_shift_toggle']"
+  gsettings set org.gnome.desktop.input-sources per-window true
+  gsettings set org.gnome.desktop.input-sources settings "[('xkb', 'us'), ('xkb', 'ru')]"
+  gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Alt><Super>"
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$COMMAND"
