@@ -1,0 +1,14 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+
+reset-list
+
+add-to-list qt5-style-plugins
+
+# Update indexes and install packages from the list
+package-list-update
+package-install-from-repos $LIST
