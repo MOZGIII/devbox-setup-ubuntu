@@ -1,0 +1,27 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+
+CUSTOM_WRAPPER_FILE="/usr/local/bin/google-chrome-stable-with-flags"
+ORIGINAL_WRAPPER_FILE="/usr/bin/google-chrome-stable"
+
+log 'Creating package diversion for google-chrome-stable'
+dpkg-divert --add --rename "$ORIGINAL_WRAPPER_FILE"
+DIVERTED_WRAPPER_FILE="$(dpkg-divert --truename "$ORIGINAL_WRAPPER_FILE")"
+
+log 'Creating custom wrapper for google-chrome-stable'
+cat <<-EOF > "$CUSTOM_WRAPPER_FILE"
+#!/bin/bash
+exec -a "\$0" "$DIVERTED_WRAPPER_FILE" --force-dark-mode "\$@"
+EOF
+chmod a+x "$CUSTOM_WRAPPER_FILE"
+
+log 'Creating an alternative for google-chrome-stable'
+update-alternatives \
+  --install "$ORIGINAL_WRAPPER_FILE" \
+  google-chrome-stable \
+  "$CUSTOM_WRAPPER_FILE" \
+  999
