@@ -1,0 +1,35 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log "Installing latest krew"
+KREW_INSTALL_COMMAND="$(cat <<-COMMANDEOF
+  set -euo pipefail
+  TMPDIR="\$(mktemp -d)"
+  if [[ -z "\$TMPDIR" ]] || [[ "\$TMPDIR" == "/" ]] || [[ "\$TMPDIR" == "/tmp" ]]; then
+    fatal "Unable to generate temp directory, got \$TMPDIR"
+  fi
+  cd "\$TMPDIR"
+
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}"
+  tar zxvf krew.tar.gz
+  KREW="./krew-\$(uname | tr '[:upper:]' '[:lower:]')_amd64"
+  "\$KREW" install --manifest=krew.yaml --archive=krew.tar.gz
+  "\$KREW" update
+
+  cd -
+  rm -rf "\$TMPDIR"
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$KREW_INSTALL_COMMAND"
+
+log "Configuring krew PATH extension for user $NON_ROOT_USER"
+KREW_PATH_COMMAND="$(cat <<-COMMANDEOF
+  echo 'export PATH="\$HOME/.krew/bin:\$PATH"' >> ~/.profile
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" "$KREW_PATH_COMMAND"
