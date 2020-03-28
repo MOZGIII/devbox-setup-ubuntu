@@ -139,6 +139,10 @@ function run_command_as_user {
   COMMAND=$1
   shift
 
+  # Inject options
+  SET_OPTIONS="set -euo pipefail"
+  COMMAND="$SET_OPTIONS ; $COMMAND"
+
   # Inject sourcing self
   SOURCE_SELF="source \"$UTILS_SCRIPT_PATH\""
   COMMAND="$SOURCE_SELF ; $COMMAND"
