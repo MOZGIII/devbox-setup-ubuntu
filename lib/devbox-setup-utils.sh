@@ -1,4 +1,7 @@
 #!/bin/bash
+
+UTILS_SCRIPT_PATH="$(realpath "${BASH_SOURCE[0]}")"
+
 function devbox-setup-init {
   set -e
 
@@ -135,6 +138,10 @@ function run_command_as_user {
 
   COMMAND=$1
   shift
+
+  # Inject sourcing self
+  SOURCE_SELF="source \"$UTILS_SCRIPT_PATH\""
+  COMMAND="$SOURCE_SELF ; $COMMAND"
 
   su "$RUN_AS" -l -s /bin/bash -c "$COMMAND"
 }
