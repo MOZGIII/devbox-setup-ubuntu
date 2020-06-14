@@ -14,13 +14,7 @@ package-install-from-repos zsh
 run_command_as_user "$NON_ROOT_USER" "export SHELL=zsh ; sh -c \"\$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)\"" || true
 
 # Create user shell
-USER_SHELL_NAME="${NON_ROOT_USER}-shell"
-log "Creating user shell at $USER_SHELL_NAME"
-cat <<-CODE > "/usr/local/bin/$USER_SHELL_NAME"
-#!/bin/bash -l
-exec zsh "\$@"
-CODE
-chmod +x "/usr/local/bin/$USER_SHELL_NAME"
+USER_SHELL_NAME="zsh"
 
 # Configure zsh
 ZSHRC_PATH="$(run_command_as_user "$NON_ROOT_USER" "echo \$HOME")/.zshrc"
@@ -50,7 +44,7 @@ sed -i 's/^ZSH_THEME="robbyrussell"$/& # extended for ssh support\n\nif [[ ! -z 
 log "Configuring user shell to be used in X11 sessions for user $NON_ROOT_USER"
 CONFIGURE_SHELL_COMMAND="$(cat <<-COMMANDEOF
 if [[ ! -f ~/.xsessionrc ]] || ! grep -q 'SHELL=' ~/.xsessionrc; then
-  echo 'SHELL=/usr/local/bin/$USER_SHELL_NAME' >> ~/.xsessionrc
+  echo "SHELL=\$(which zsh)" >> ~/.xsessionrc
 fi
 COMMANDEOF
 )"
