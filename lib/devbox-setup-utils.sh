@@ -124,7 +124,7 @@ function detect-non-root-user {
 function require-non-root-user {
   detect-non-root-user
 
-  if [[ -z "$NON_ROOT_USER" ]]; then
+  if [[ -z "$NON_ROOT_USER" || "$NON_ROOT_USER" == "root" ]]; then
     echo "Non root user must be specified for this command"
     echo "Automatic detection (with \$SUDO_USER) failed"
     echo "Pass --non-root-user [user] to specify non-root user manually"
