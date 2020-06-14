@@ -1,0 +1,16 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log "Switching user dirs locale for $NON_ROOT_USER"
+SWITCH_LOCALE_COMMAND="$(cat <<-'COMMANDEOF'
+set -e
+echo "$HOME"
+whoami
+COMMANDEOF
+)"
+run_command_as_user "$NON_ROOT_USER" bash - <<< "$SWITCH_LOCALE_COMMAND"
