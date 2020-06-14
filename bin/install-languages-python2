@@ -7,4 +7,4 @@ require-root
 require-non-root-user
 
 log 'Installing additional Python 2 packages from the repos'
-package-install-from-repos python python-pip python-dev python-virtualenv
+package-install-from-repos python2 python2-dev python-pip-whl
