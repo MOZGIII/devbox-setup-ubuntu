@@ -11,7 +11,7 @@ package-list-update
 package-install-from-repos zsh
 
 # Install on-my-zsh
-run_command_as_user "$NON_ROOT_USER" "export SHELL=zsh ; sh -c \"\$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)\" ; true"
+run_command_as_user "$NON_ROOT_USER" "export SHELL=zsh ; sh -c \"\$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)\"" || true
 
 # Create user shell
 USER_SHELL_NAME="${NON_ROOT_USER}-shell"
@@ -23,7 +23,12 @@ CODE
 chmod +x "/usr/local/bin/$USER_SHELL_NAME"
 
 # Configure zsh
-ZSHRC_PATH="$(run_command_as_user "$NON_ROOT_USER" "echo $HOME")/.zshrc"
+ZSHRC_PATH="$(run_command_as_user "$NON_ROOT_USER" "echo \$HOME")/.zshrc"
+if [[ "$ZSHRC_PATH" == "/root/.zshrc" ]]; then
+  echo "Error: detected ZSHRC_PATH is $ZSHRC_PATH" >&2
+  exit 1
+fi
+
 log "Configuring zsh via $ZSHRC_PATH"
 BUMPER_STRING='# devbox-setup config below'
 
