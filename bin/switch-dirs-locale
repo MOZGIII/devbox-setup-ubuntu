@@ -9,22 +9,22 @@ require-non-root-user
 log "Switching user dirs locale for $NON_ROOT_USER"
 SWITCH_LOCALE_COMMAND="$(cat <<-COMMANDEOF
 set -e
-if [ ! -f "${HOME}/.config/user-dirs.dirs" ]; then
+if [ ! -f "\$HOME/.config/user-dirs.dirs" ]; then
   echo "No user-dirs.dirs found, will not proceed"
   exit
 fi
 
-if [ ! -f "${HOME}/.config/user-dirs.locale" ]; then
+if [ ! -f "\$HOME/.config/user-dirs.locale" ]; then
   echo "No user-dirs.locale found, forcing generation of current-locale one"
   xdg-user-dirs-update --force
 fi
 
-if [ "$(cat "${HOME}/.config/user-dirs.locale")x" == "Cx" ]; then
+if [ "$(cat "\$HOME/.config/user-dirs.locale")x" == "Cx" ]; then
   echo "User-dirs are already in C locale, no need to migrate"
   exit
 fi
 
-source "${HOME}/.config/user-dirs.dirs"
+source "\$HOME/.config/user-dirs.dirs"
 
 TARGET_DESKTOP=Desktop
 TARGET_DOWNLOAD=Downloads
@@ -36,24 +36,26 @@ TARGET_PICTURES=Pictures
 TARGET_VIDEOS=Videos
 
 function migrate_user_dir {
-  echo Moving "$1" to "$2"
-  mv -t "$2" "$1"
+  SRC="\$1"
+  DST="\$2"
+  echo Moving "\$SRC" to "\$DST"
+  mv -T "\$SRC" "\$DST"
 }
 
-migrate_user_dir "$XDG_DESKTOP_DIR" "$HOME/$TARGET_DESKTOP"
-migrate_user_dir "$XDG_DOWNLOAD_DIR" "$HOME/$TARGET_DOWNLOAD"
-migrate_user_dir "$XDG_TEMPLATES_DIR" "$HOME/$TARGET_TEMPLATES"
-migrate_user_dir "$XDG_PUBLICSHARE_DIR" "$HOME/$TARGET_PUBLICSHARE"
-migrate_user_dir "$XDG_DOCUMENTS_DIR" "$HOME/$TARGET_DOCUMENTS"
-migrate_user_dir "$XDG_MUSIC_DIR" "$HOME/$TARGET_MUSIC"
-migrate_user_dir "$XDG_PICTURES_DIR" "$HOME/$TARGET_PICTURES"
-migrate_user_dir "$XDG_VIDEOS_DIR" "$HOME/$TARGET_VIDEOS"
+migrate_user_dir "\$XDG_DESKTOP_DIR" "\$HOME/\$TARGET_DESKTOP"
+migrate_user_dir "\$XDG_DOWNLOAD_DIR" "\$HOME/\$TARGET_DOWNLOAD"
+migrate_user_dir "\$XDG_TEMPLATES_DIR" "\$HOME/\$TARGET_TEMPLATES"
+migrate_user_dir "\$XDG_PUBLICSHARE_DIR" "\$HOME/\$TARGET_PUBLICSHARE"
+migrate_user_dir "\$XDG_DOCUMENTS_DIR" "\$HOME/\$TARGET_DOCUMENTS"
+migrate_user_dir "\$XDG_MUSIC_DIR" "\$HOME/\$TARGET_MUSIC"
+migrate_user_dir "\$XDG_PICTURES_DIR" "\$HOME/\$TARGET_PICTURES"
+migrate_user_dir "\$XDG_VIDEOS_DIR" "\$HOME/\$TARGET_VIDEOS"
 
-rm "${HOME}/.config/user-dirs.locale" "${HOME}/.config/user-dirs.dirs"
+rm "\$HOME/.config/user-dirs.locale" "\$HOME/.config/user-dirs.dirs"
 LC_ALL=C xdg-user-dirs-update --force
 
 # Remove locale to preserve changes
-rm "${HOME}/.config/user-dirs.locale"
+rm "\$HOME/.config/user-dirs.locale"
 COMMANDEOF
 )"
-run_command_as_user "$NON_ROOT_USER" bash - < "$SWITCH_LOCALE_COMMAND"
+run_command_as_user "$NON_ROOT_USER" "$SWITCH_LOCALE_COMMAND"
