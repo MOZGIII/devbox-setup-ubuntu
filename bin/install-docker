@@ -21,8 +21,8 @@ echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -c
 log 'Updating packages list'
 package-list-update
 
-log 'Installing docker-ce'
-package-install-from-repos docker-ce
+log 'Installing docker'
+package-install-from-repos docker-ce docker-ce-cli containerd.io
 
 log "Adding user $NON_ROOT_USER to docker group"
 usermod -aG docker "$NON_ROOT_USER"
