@@ -8,9 +8,6 @@ require-non-root-user
 
 reset-list
 
-package-repo-add 'ppa:numix/ppa'
-add-to-list numix-icon-theme-circle numix-icon-theme
-
 package-repo-add 'ppa:indicator-multiload/stable-daily'
 add-to-list indicator-multiload
 
@@ -20,5 +17,3 @@ add-to-list unity-tweak-tool
 # Update indexes and install packages from the list
 package-list-update
 package-install-from-repos $LIST
-
-run_command_as_user "$NON_ROOT_USER" "gsettings set org.gnome.desktop.interface icon-theme 'Numix-Circle'"
