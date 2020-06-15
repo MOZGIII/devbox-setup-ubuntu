@@ -32,6 +32,7 @@ cat <<-CODE >> "$ZSHRC_PATH"
 
 $BUMPER_STRING
 unsetopt share_history
+unsetopt AUTO_CD
 [[ -f /etc/profile.d/vte.sh ]] && source /etc/profile.d/vte.sh
 [[ -f "\$HOME/.aliases" ]] && source "\$HOME/.aliases"
 CODE
