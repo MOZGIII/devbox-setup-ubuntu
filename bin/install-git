@@ -28,9 +28,4 @@ log 'Installing git packages'
 
 package-install-from-repos $LIST
 
-log "Setting git configuration for user $NON_ROOT_USER"
-SETTINGS_COMMAND="$(cat <<-COMMANDEOF
-  git config --global push.default current
-COMMANDEOF
-)"
-run_command_as_user "$NON_ROOT_USER" "$SETTINGS_COMMAND"
+exec ./apply-git-settings
