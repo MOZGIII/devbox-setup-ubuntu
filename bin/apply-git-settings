@@ -9,6 +9,7 @@ require-non-root-user
 log "Applying git settings for user $NON_ROOT_USER"
 COMMAND="$(cat <<-COMMANDEOF
   git config --global push.default current
+  git config --global rebase.autosquash true
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$COMMAND"
