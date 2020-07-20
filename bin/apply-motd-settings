@@ -1,0 +1,12 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+
+log "Disabling motd news"
+sed -i 's/^ENABLED=.*/ENABLED=0/' /etc/default/motd-news
+
+log "Disabling some dynamic motd parts"
+chmod -x /etc/update-motd.d/10-help-text
