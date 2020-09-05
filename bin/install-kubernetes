@@ -12,15 +12,21 @@ package-install-from-repos apt-transport-https lsb-release
 log 'Installing google apt key'
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
+log 'Installing helm apt key'
+curl -s https://baltocdn.com/helm/signing.asc | apt-key add -
+
 log 'Choosing kubernetes repo'
 REPO_RELEASE="kubernetes-xenial"
 
 log 'Installing kubernetes apt repo'
 echo "deb http://apt.kubernetes.io/ $REPO_RELEASE main" | tee /etc/apt/sources.list.d/kubernetes.list
 
-log 'Installing kubectl'
+log 'Installing helm apt repo'
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm.list
+
+log 'Installing kubectl and helm'
 package-list-update
-package-install-from-repos kubectl
+package-install-from-repos kubectl helm
 
 log "Configuring KUBECONFIG collection dir for user $NON_ROOT_USER"
 KUBECONFIG_COMMAND="$(cat <<-COMMANDEOF
