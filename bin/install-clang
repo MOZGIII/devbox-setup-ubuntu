@@ -1,0 +1,27 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")"
+source ../lib/devbox-setup-utils.sh
+devbox-setup-init
+
+require-root
+require-non-root-user
+
+log 'Installing apt-transport-https'
+package-install-from-repos apt-transport-https lsb-release
+
+log 'Installing llvm apt key'
+curl -s https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+
+log 'Picking clang release'
+CLANG_RELEASE="11"
+
+log 'Installing clang apt repo'
+CODENAME="$(lsb_release -cs)"
+tee /etc/apt/sources.list.d/clang.list <<EOF
+deb http://apt.llvm.org/$CODENAME/ llvm-toolchain-$CODENAME-$CLANG_RELEASE main
+deb-src http://apt.llvm.org/$CODENAME/ llvm-toolchain-$CODENAME-$CLANG_RELEASE main
+EOF
+
+log 'Installing clang'
+package-list-update
+package-install-from-repos "clang-$CLANG_RELEASE" "lld-$CLANG_RELEASE" "lldb-$CLANG_RELEASE"
