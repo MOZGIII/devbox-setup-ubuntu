@@ -31,8 +31,10 @@ echo 'export PATH="$PATH:/usr/local/go/bin"' > /etc/profile.d/go.sh
 
 log "Writing GOPATH and PATH extension for user $NON_ROOT_USER"
 GOPATH_CONFIG_COMMAND="$(cat <<-COMMANDEOF
-  echo 'export GOPATH="\$HOME/go"' >> ~/.profile
-  echo 'export PATH="\$GOPATH/bin:\$PATH"' >> ~/.profile
+  if ! grep -q GOPATH ~/.profile; then
+    echo 'export GOPATH="\$HOME/go"' >> ~/.profile
+    echo 'export PATH="\$GOPATH/bin:\$PATH"' >> ~/.profile
+  fi
 COMMANDEOF
 )"
 run_command_as_user "$NON_ROOT_USER" "$GOPATH_CONFIG_COMMAND"
