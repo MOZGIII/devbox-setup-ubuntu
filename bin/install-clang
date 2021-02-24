@@ -25,3 +25,9 @@ EOF
 log 'Installing clang'
 package-list-update
 package-install-from-repos "clang-$CLANG_RELEASE" "lld-$CLANG_RELEASE" "lldb-$CLANG_RELEASE"
+
+log 'Configuring alternatives'
+update-alternatives --install /usr/bin/clang clang "/usr/bin/clang-$CLANG_RELEASE" 110 \
+  --slave /usr/bin/clang++ clang++ "/usr/bin/clang-$CLANG_RELEASE"
+update-alternatives --install /usr/bin/cc cc /usr/bin/clang 50
+update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 50
