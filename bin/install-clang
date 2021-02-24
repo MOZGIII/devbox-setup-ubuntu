@@ -17,7 +17,7 @@ CLANG_RELEASE="11"
 
 log 'Installing clang apt repo'
 CODENAME="$(lsb_release -cs)"
-tee /etc/apt/sources.list.d/clang.list <<EOF
+tee "/etc/apt/sources.list.d/clang-$CLANG_RELEASE.list" <<EOF
 deb http://apt.llvm.org/$CODENAME/ llvm-toolchain-$CODENAME-$CLANG_RELEASE main
 deb-src http://apt.llvm.org/$CODENAME/ llvm-toolchain-$CODENAME-$CLANG_RELEASE main
 EOF
