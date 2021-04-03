@@ -10,19 +10,21 @@ log 'Installing apt-transport-https'
 package-install-from-repos apt-transport-https lsb-release
 
 log 'Installing google apt key'
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+K8S_REPO_KEY_PATH="/usr/share/keyrings/kubernetes-archive-keyring.gpg"
+curl -sSLo "$K8S_REPO_KEY_PATH" https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
 log 'Installing helm apt key'
-curl -s https://baltocdn.com/helm/signing.asc | apt-key add -
+HELM_REPO_KEY_PATH="/usr/share/keyrings/helm-archive-keyring.asc"
+curl -sSLo "$HELM_REPO_KEY_PATH" https://baltocdn.com/helm/signing.asc
 
 log 'Choosing kubernetes repo'
 REPO_RELEASE="kubernetes-xenial"
 
 log 'Installing kubernetes apt repo'
-echo "deb http://apt.kubernetes.io/ $REPO_RELEASE main" | tee /etc/apt/sources.list.d/kubernetes.list
+echo "deb [signed-by=$K8S_REPO_KEY_PATH] http://apt.kubernetes.io/ $REPO_RELEASE main" | tee /etc/apt/sources.list.d/kubernetes.list
 
 log 'Installing helm apt repo'
-echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm.list
+echo "deb [signed-by=$HELM_REPO_KEY_PATH] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm.list
 
 log 'Installing kubectl and helm'
 package-list-update
