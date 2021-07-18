@@ -17,8 +17,8 @@ echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ $(lsb_release -cs) main
 add-to-list git-lfs
 
 log 'Adding git-secret repo'
-curl -sL 'https://api.bintray.com/users/sobolevn/keys/gpg/public.key' | apt-key add -
-echo 'deb https://dl.bintray.com/sobolevn/deb git-secret main' > '/etc/apt/sources.list.d/git-secret.list'
+curl -sL 'https://gitsecret.jfrog.io/artifactory/api/gpg/key/public' | apt-key add -
+echo 'deb https://gitsecret.jfrog.io/artifactory/git-secret-deb git-secret main' > '/etc/apt/sources.list.d/git-secret.list'
 add-to-list git-secret
 
 log 'Updating package list'
