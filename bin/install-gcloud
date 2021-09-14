@@ -12,11 +12,8 @@ package-install-from-repos apt-transport-https lsb-release
 log 'Installing google apt key'
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
-log 'Choosing cloud-sdk repo'
-CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-
 log 'Installing google-cloud-sdk apt repo'
-echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee /etc/apt/sources.list.d/google-cloud-sdk.list
+echo "deb http://packages.cloud.google.com/apt cloud-sdk main" | tee /etc/apt/sources.list.d/google-cloud-sdk.list
 
 log 'Installing google-cloud-sdk'
 package-list-update
