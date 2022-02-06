@@ -13,7 +13,7 @@ log 'Installing llvm apt key'
 curl -s https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
 
 log 'Picking clang release'
-CLANG_RELEASE="12"
+CLANG_RELEASE="13"
 
 log 'Installing clang apt repo'
 CODENAME="$(lsb_release -cs)"
