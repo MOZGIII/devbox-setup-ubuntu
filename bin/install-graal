@@ -13,11 +13,13 @@ log 'Installing build dependencies for TruffleRuby specificly (may solve other r
 package-install-from-repos libssl-dev libz-dev make clang llvm
 
 log "Determining latest Graal version"
-GRAAL_VERSION="$(github-latest "oracle/graal")"
-
-GRAAL_RELEASE="vm-$GRAAL_VERSION"
-GRAAL_ARCHIVE="graalvm-ce-linux-amd64-$GRAAL_VERSION.tar.gz"
-GRAAL_URL="https://github.com/oracle/graal/releases/download/$GRAAL_RELEASE/$GRAAL_ARCHIVE"
+GRAAL_REPO="graalvm/graalvm-ce-builds"
+GRAAL_RELEASE="$(github-latest "$GRAAL_REPO")"
+GRAAL_VERSION="${GRAAL_RELEASE#"vm-"}"
+GRAAL_JAVA_VERSION="java11"
+GRAAL_ARCH="$(uname -m)"
+GRAAL_ARCHIVE="graalvm-ce-$GRAAL_JAVA_VERSION-linux-$GRAAL_ARCH-$GRAAL_VERSION.tar.gz"
+GRAAL_URL="https://github.com/$GRAAL_REPO/releases/download/$GRAAL_RELEASE/$GRAAL_ARCHIVE"
 
 log "Downloading and installing $GRAAL_ARCHIVE ($GRAAL_RELEASE) for user $NON_ROOT_USER"
 INSTALL_COMMAND="$(cat <<-COMMANDEOF
