@@ -12,7 +12,9 @@ package-install-from-repos wget git subversion mercurial tar
 log 'Installing build dependencies for TruffleRuby specificly (may solve other reqs too)'
 package-install-from-repos libssl-dev libz-dev make clang llvm
 
-GRAAL_VERSION="19.1.0"
+log "Determining latest Graal version"
+GRAAL_VERSION="$(github-latest "oracle/graal")"
+
 GRAAL_RELEASE="vm-$GRAAL_VERSION"
 GRAAL_ARCHIVE="graalvm-ce-linux-amd64-$GRAAL_VERSION.tar.gz"
 GRAAL_URL="https://github.com/oracle/graal/releases/download/$GRAAL_RELEASE/$GRAAL_ARCHIVE"
